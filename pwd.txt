@@ -1,0 +1,42 @@
+def old_acc():
+   count = 0  # count created to limit number of failed logins
+   success = False # keeps track of succesful login
+   while count <= 3 and not success:
+      login = input("Username:    ")  # prompts user to login in with their username
+      pw = input("Password:   ")  # prompts user to login in with their password
+
+       for line in open("db.txt", "r").readlines():
+          acc_info = line.split()
+
+           # if username and pw match, login is successful; generate otp
+           if login == acc_info[0] and pw == acc_info[1]:
+               gen_otp()
+               print("ACCESS GRANTED")
+               access_info()
+               success = True
+               break
+
+        # if username and pw do not match, prompt user to try again
+    if not success:
+        print("\nIncorrect Username or Password. Please try again.\n")
+        count += 1
+
+    # if failure count is = 3, deny access and lock out.
+    if count == 3:
+        # stops code and doesn't allow any further input
+        sys.exit("ACCESS LOCKED. YOU DON'T DESERVE TO SEE WHAT'S HERE. GOODBYE.")
+        
+    def gen_otp():
+    digits = "0123456789"  # digits for OTP generation
+    otp = ""
+
+    for i in range(4):
+        otp += digits[math.floor(random.random() * 10)]
+    mbox("Enter OTP", otp, 1)  # gives user message with OTP
+    otp_input = input("Enter OTP:   ")
+
+    if otp == otp_input:
+        print("ACCESS GRANTED")
+        access_info()
+
+    return otp
